@@ -22,6 +22,9 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.IO;
 
 namespace SDKTemplate
 {
@@ -184,7 +187,18 @@ namespace SDKTemplate
                                 case BitmapPixelFormat.Gray8:
 
                                     // Use pseudo color to render 8 bits frames.
+                                    //REMOVED PSEUDO COLOR
+                                    byte[] buffer = new byte[230400];
+                                    
                                     result = TransformBitmap(inputBitmap, PseudoColorHelper.PseudoColorFor8BitInfrared);
+                                    //Debug.WriteLine("Transformed Bitmap");
+                                    //Debug.WriteLine(inputBitmap);
+                                    //Debug.WriteLine(inputBitmap.PixelHeight);
+                                    //Debug.WriteLine(inputBitmap.PixelWidth);
+                                    inputBitmap.CopyToBuffer(buffer.AsBuffer());
+                                    string bufferstring = BitConverter.ToString(buffer);
+                                    Debug.WriteLine(bufferstring);
+                                    
                                     break;
 
                                 case BitmapPixelFormat.Nv12:
@@ -408,7 +422,9 @@ namespace SDKTemplate
                 uint* outputRow = (uint*)outputRowBytes;
                 for (int x = 0; x < pixelWidth; x++)
                 {
-                    outputRow[x] = InfraredColor(inputRow[x] / (float)Byte.MaxValue);
+                    //MODIFIED TO NOT CHANGE COLOR
+                    //outputRow[x] = InfraredColor(inputRow[x] / (float)Byte.MaxValue);
+                    outputRow[x] = inputRow[x];
                 }
             }
 
